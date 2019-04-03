@@ -1,17 +1,18 @@
 cmake_minimum_required(VERSION 3.12)
 
 # Especificamos la version usando el estilo "semver"
-set (PRUEBA_VERSION_MAJOR 1)
-set (PRUEBA_VERSION_MINOR 0)
-set (PRUEBA_VERSION_PATCH 0)
-set (PRUEBA_VERSION ${PRUEBA_VERSION_MAJOR}.${PRUEBA_VERSION_MINOR}.${PRUEBA_VERSION_PATCH})
+set (VERSION_MAJOR 1)
+set (VERSION_MINOR 0)
+set (VERSION_PATCH 0)
+set (PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 # Nombre del Proyecto y Lenguaje
-project(prueba VERSION ${PRUEBA_VERSION}
+project(prueba VERSION ${PROJECT_VERSION}
                LANGUAGES CXX
                DESCRIPTION "Version de prueba para tener un esqueleto")
 
 # Variables del Proyecto
-set( ${PROJECT_NAME}_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set( ${PROJECT_NAME}_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set( ${PROJECT_NAME}_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set( ${PROJECT_NAME}_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
 
@@ -33,10 +34,13 @@ configure_file (
 # Librerias internas
 #############################
 # Para añadir una librería de nuestra cosecha
-# add_library(calclib STATIC src/calclib.cpp include/calc/lib.hpp)
-# target_include_directories(calclib PUBLIC include)
-# target_compile_features(calclib PUBLIC cxx_std_11)
+add_library(point STATIC ${${PROJECT_NAME}_SOURCE_DIR}/point.cpp ${${PROJECT_NAME}_INCLUDE_DIR}/point.h)
+target_include_directories(point PUBLIC ${${PROJECT_NAME}_INCLUDE_DIR})
+target_compile_features(point PUBLIC cxx_std_11)
 
+set( LIBS
+    point
+    )
 #############################
 # Crear Ejecutable
 #############################
@@ -47,5 +51,5 @@ add_executable( ${PROJECT_NAME} ${CMAKE_SOURCES} )
 # Librerias externas
 ##################
 # Aquí se deben de linkar las librerias que dependan del proyecto (opengl, threads, boost)
-# target_link_libraries( ${PROJECT_NAME} ${LIBS} m )
+target_link_libraries( ${PROJECT_NAME} ${LIBS} )
 
